@@ -1,0 +1,44 @@
+header {
+    font-family: KievitWebProBold, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 36px;
+    color: #535353;
+    display: flex;
+    margin-bottom: 12px;
+    border-bottom: 1px black solid;
+}
+.content {
+    font-size: 12px;
+    line-height: 18px;
+    color: #535353;
+}
+.header2 {
+    color: #815422 !important;
+    margin-right: 2px;
+}
+#numberContainer {
+    margin-bottom: 6px;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+}
+.balls {
+    padding: 0;
+}
+.balls li {
+    background: #fff;
+    display: inline-block;
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    line-height: 26px;
+    border: 2px solid #CCCCCC;
+    text-align: center;
+    font-size: 16px;
+    margin-right: 6px;
+    color: #535353;
+    box-sizing: border-box;
+}
+.balls li.extra {
+    border-color: #815422;
+}

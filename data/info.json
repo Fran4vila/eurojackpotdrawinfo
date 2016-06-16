@@ -1,0 +1,115 @@
+{
+  "last": {
+    "nr": 221,
+    "currency": "EUR",
+    "date": {
+      "full": "Die Lottozahlen vom Freitag, den 10.06.2016",
+      "day": 10,
+      "month": 6,
+      "year": 2016,
+      "dayOfWeek": "Freitag"
+    },
+    "closingDate": "10.06.2016, 19:00",
+    "lateClosingDate": "10.06.2016, 20:30",
+    "numbers": [
+      11,
+      12,
+      26,
+      28,
+      37
+    ],
+    "euroNumbers": [
+      8,
+      10
+    ],
+    "jackpot": 23,
+    "marketingJackpot": 23,
+    "specialMarketingJackpot": 23,
+    "climbedSince": 4,
+    "Winners": 474003,
+    "odds": {
+      "rank0": {
+        "winners": 0,
+        "specialPrize": 0,
+        "prize": 0
+      },
+      "rank1": {
+        "winners": 0,
+        "specialPrize": 0,
+        "prize": 2300000000
+      },
+      "rank2": {
+        "winners": 0,
+        "specialPrize": 0,
+        "prize": 0
+      },
+      "rank3": {
+        "winners": 6,
+        "specialPrize": 0,
+        "prize": 6726590
+      },
+      "rank8": {
+        "winners": 14410,
+        "specialPrize": 0,
+        "prize": 2890
+      },
+      "rank9": {
+        "winners": 21426,
+        "specialPrize": 0,
+        "prize": 1880
+      },
+      "rank10": {
+        "winners": 45743,
+        "specialPrize": 0,
+        "prize": 1360
+      },
+      "rank4": {
+        "winners": 26,
+        "specialPrize": 0,
+        "prize": 517430
+      },
+      "rank5": {
+        "winners": 454,
+        "specialPrize": 0,
+        "prize": 26660
+      },
+      "rank6": {
+        "winners": 1025,
+        "specialPrize": 0,
+        "prize": 9180
+      },
+      "rank11": {
+        "winners": 73760,
+        "specialPrize": 0,
+        "prize": 1360
+      },
+      "rank7": {
+        "winners": 1054,
+        "specialPrize": 0,
+        "prize": 7650
+      },
+      "rank12": {
+        "winners": 316099,
+        "specialPrize": 0,
+        "prize": 810
+      }
+    }
+  },
+  "next": {
+    "nr": 222,
+    "currency": "EUR",
+    "date": {
+      "full": "Die Lottozahlen vom Freitag, den 17.06.2016",
+      "day": 17,
+      "month": 6,
+      "year": 2016,
+      "dayOfWeek": "Freitag"
+    },
+    "closingDate": "17.06.2016, 19:00",
+    "lateClosingDate": "17.06.2016, 19:00",
+    "jackpot": 28,
+    "marketingJackpot": 28,
+    "specialMarketingJackpot": 28,
+    "climbedSince": 5
+  }
+}
