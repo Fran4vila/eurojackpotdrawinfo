@@ -8,17 +8,23 @@
     <div id="contentInfo" class="content">
         <header>
             <span class='header2'>{{subTitle}}</span>
-            <span id="selectedDate"></span>
+            <span id="selectedDate">{{selectedDate}}</span>
         </header>
         <div id="results">
-            <div id="numberContainer"></div>
+            <div id="numberContainer">{{numbers}}</div>
             <div id="tableContainer"></div>
         </div>
     </div>
-    <div id="ball">
-    	<li>{{number}}</li>
-    </div>
-    <div id="extraBall">
-    	<li class="extra">{{number}}</li>
+    <div id="rowResult">
+        <tr>
+            <td class="division">
+                <span class="tierSpan basic entry">{{tier}}</span>
+                <span class="rankSpan entry wrap">{{rank}}</span>
+            </td>
+            <td class="number">
+                <span class="tierSpan basic entry  minor">{{winners}}</span>
+                <span class="rankSpan entry major money"><span class="">€{{prize}}</span></span>
+            </td>
+        </tr>
     </div>
 </div>

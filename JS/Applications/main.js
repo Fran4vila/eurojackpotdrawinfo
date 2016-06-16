@@ -1,9 +1,59 @@
 var data; // JSON with the information provided form the site
-const setOfTemplates = ["headerDatePicker", "contentInfo"];
+const setOfTemplates = ["headerDatePicker", "contentInfo", "rowResult"];
 const days_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const days_names_short = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const month_names_short = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const results_table = {
+	'rank1': {
+		'tier': 'Tier I',
+		'combination': '5 Numbers, 2 Euronumbers'
+	},
+	'rank2': {
+		'tier': 'Tier II',
+		'combination': '5 Numbers, 1 Euronumber'
+	},
+	'rank3': {
+		'tier': 'Tier III',
+		'combination': '5 Numbers, 0 Euronumbers'
+	},
+	'rank4': {
+		'tier': 'Tier IV',
+		'combination': '4 Numbers, 2 Euronumbers'
+	},
+	'rank5': {
+		'tier': 'Tier V',
+		'combination': '4 Numbers, 1 Euronumber'
+	},
+	'rank6': {
+		'tier': 'Tier VI',
+		'combination': '4 Numbers, 0 Euronumbers'
+	},
+	'rank7': {
+		'tier': 'Tier VII',
+		'combination': '3 Numbers, 2 Euronumbers'
+	},
+	'rank8': {
+		'tier': 'Tier VIII',
+		'combination': '2 Numbers, 2 Euronumbers'
+	},
+	'rank9': {
+		'tier': 'Tier IX',
+		'combination': '3 Numbers, 1 Euronumber'
+	},
+	'rank10': {
+		'tier': 'Tier X',
+		'combination': '3 Numbers, 0 Euronumbers'
+	},
+	'rank11': {
+		'tier': 'Tier XI',
+		'combination': '1 Numbers, 2 Euronumbers'
+	},
+	'rank12': {
+		'tier': 'Tier XII',
+		'combination': '2 Numbers, 1 Euronumber'
+	},
+}
 var mainApp = $('#mainApp');
 
 function getData () {
@@ -67,14 +117,15 @@ function createHeader () {
 }
 function createContent() {
 	var info = {
-        'subTitle': "EuroJackpot"
+        'subTitle': "EuroJackpot",
+        'selectedDate': `Results for ${getSelectedDateText(data.last.date.full)}`
     };
 	var html = ich["contentInfo"](info);
 	mainApp.append(html);
-	// We insert the Date selected
-	$('#selectedDate').text(`Results for ${getSelectedDateText(data.last.date.full)}`);
 	// We include the numbers
 	$('#numberContainer').html(getNumbersByDate(data.last));
+	// Summary of results
+	createTable();
 }
 
 function getSelectedDateText (selectDate) {
@@ -90,4 +141,25 @@ function getNumbersByDate (selectDate) {
 	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[0]} </li>`);
 	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[1]} </li>`);
 	return auxCombination;
+}
+function createTable () {
+	var odds = data.last.odds,
+		tr = [],
+		rank;
+
+	delete odds.rank0;
+	var auxOdd, auxInfoTier, tBody = $('<tbody></tbody>');
+	for (lines in odds) {
+		auxOdd = odds[lines];
+		auxInfoTier = results_table[lines];
+		let infoRow = {
+			'tier': auxInfoTier.tier,
+			'rank': auxInfoTier.combination,
+			'winners': auxOdd.winners,
+			'prize': auxOdd.prize
+		};
+		tBody.append(ich['rowResult'](infoRow));
+	}
+	var table = $('<table></table>').append(tBody);
+	$('#tableContainer').append(table);
 }
