@@ -46,5 +46,48 @@ function createTemplate(data, templateId) {
 }
 
 function build () {
+	createHeader();
+	createContent();
+}
+function createHeader () {
+	var info = {
+        'headerText': "EuroJackpot Results & Winning Numbers"
+    };
+    var html = ich["headerDatePicker"](info);
+	mainApp.append(html);
+	// Create the Select box
+	var lastDate = new Date(data.last.date.full);
+	var sel = $('#datePickerSelectedDay');
+	sel.append($("<option>").attr('value',lastDate).text(`${days_names[lastDate.getDay()]} ${lastDate.getDate()} ${month_names_short[lastDate.getMonth()]}`));
+	// We show last 10 dates
+	for (var i=0; i<10; i++) {
+		lastDate.setDate(lastDate.getDate() -7);
+		sel.append($("<option>").attr('value',lastDate).text(`${days_names[lastDate.getDay()]} ${lastDate.getDate()} ${month_names_short[lastDate.getMonth()]}`));
+	}
+}
+function createContent() {
+	var info = {
+        'subTitle': "EuroJackpot"
+    };
+	var html = ich["contentInfo"](info);
+	mainApp.append(html);
+	// We insert the Date selected
+	$('#selectedDate').text(`Results for ${getSelectedDateText(data.last.date.full)}`);
+	// We include the numbers
+	$('#numberContainer').html(getNumbersByDate(data.last));
+}
 
+function getSelectedDateText (selectDate) {
+	var date = new Date(selectDate);
+	return `${days_names[date.getDay()]} ${date.getDay()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
+}
+function getNumbersByDate (selectDate) {
+	var auxCombination = $('<ul class="balls"></ul>');
+	const length = selectDate.numbers.length;
+	for (var i=0; i<length; i++) {
+		auxCombination.append(`<li> ${selectDate.numbers[i]} </li>`);
+	}
+	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[0]} </li>`);
+	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[1]} </li>`);
+	return auxCombination;
 }
