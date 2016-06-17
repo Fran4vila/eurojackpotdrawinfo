@@ -52,8 +52,8 @@ const results_table = {
 	'rank12': {
 		'tier': 'Tier XII',
 		'combination': '2 Numbers, 1 Euronumber'
-	},
-}
+	}
+};
 
 function getData () {
 	// This Ajax request is not allowed because of Cross Domain which is disabled in server
