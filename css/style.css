@@ -4,9 +4,14 @@ header {
     font-weight: bold;
     line-height: 36px;
     color: #535353;
-    display: flex;
     margin-bottom: 12px;
     border-bottom: 1px black solid;
+    max-width: 480px;
+}
+.logo {
+    background: transparent url(../css/images/logo.png) 0px 0px no-repeat;
+    height: 50px;
+    min-width: 150px;
 }
 .content {
     font-size: 12px;
@@ -22,9 +27,8 @@ header {
     font-family: Arial, sans-serif;
     font-weight: normal;
 }
-.balls {
-    padding: 0;
-}
+#results { max-width: 480px; }
+.balls { padding: 0; }
 .balls li {
     background: #fff;
     display: inline-block;
@@ -42,3 +46,37 @@ header {
 .balls li.extra {
     border-color: #815422;
 }
+
+table { border-collapse: collapse; width: 100%; }
+tr { border-bottom: 1px solid #F2F2F2; }
+td {
+    font-size: 12px;
+    line-height: 18px;
+    color: #999999;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 35px;
+    padding: 6px;
+    text-align: left;
+    font-weight: normal;
+    vertical-align: middle;
+}
+td.entry { display: inline-block; }
+td.number { text-align: right; }
+.prize { min-width: 100px; float: right; font-weight: bold; color: #000; }
+.tierSpan { min-width: 80px; }
+.rankSpan { min-width: 135px; float:right; color:#000; }
+.winners { font-style: italic; }
+
+@media  screen and (max-width: 400px) {
+    .tierSpan { min-width:50px; float:left; }
+}
+@media  screen and (max-width: 370px) {
+    .rankSpan { float: left; clear: both; }
+}
+@media  screen and (max-width: 310px) {
+    .rankSpan { float: left; clear: both; }
+    .winners, .prize { float:right; clear: both; }
+}
+

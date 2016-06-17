@@ -54,7 +54,6 @@ const results_table = {
 		'combination': '2 Numbers, 1 Euronumber'
 	},
 }
-var mainApp = $('#mainApp');
 
 function getData () {
 	// This Ajax request is not allowed because of Cross Domain which is disabled in server
@@ -104,24 +103,27 @@ function createHeader () {
         'headerText': "EuroJackpot Results & Winning Numbers"
     };
     var html = ich["headerDatePicker"](info);
-	mainApp.append(html);
+	$('#jackpotContainer').append(html);
 	// Create the Select box
-	var lastDate = new Date(data.last.date.full);
+	var lastDate = data.last.date;
+	var auxLastDate = new Date(lastDate.year, lastDate.month, lastDate.day);
 	var sel = $('#datePickerSelectedDay');
-	sel.append($("<option>").attr('value',lastDate).text(`${days_names[lastDate.getDay()]} ${lastDate.getDate()} ${month_names_short[lastDate.getMonth()]}`));
+	sel.append($("<option>").attr('value',auxLastDate).text(`${days_names[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
 	// We show last 10 dates
 	for (var i=0; i<10; i++) {
-		lastDate.setDate(lastDate.getDate() -7);
-		sel.append($("<option>").attr('value',lastDate).text(`${days_names[lastDate.getDay()]} ${lastDate.getDate()} ${month_names_short[lastDate.getMonth()]}`));
+		auxLastDate.setDate(auxLastDate.getDate() -7);
+		sel.append($("<option>").attr('value',auxLastDate).text(`${days_names[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
 	}
+	// We disable the select because AJAX is not working and we don't have more information about other dates
+	sel.attr('disabled', true);
 }
 function createContent() {
 	var info = {
         'subTitle': "EuroJackpot",
-        'selectedDate': `Results for ${getSelectedDateText(data.last.date.full)}`
+        'selectedDate': `Results for ${getSelectedDateText(data.last.date)}`
     };
 	var html = ich["contentInfo"](info);
-	mainApp.append(html);
+	$('#jackpotContainer').append(html);
 	// We include the numbers
 	$('#numberContainer').html(getNumbersByDate(data.last));
 	// Summary of results
@@ -129,8 +131,8 @@ function createContent() {
 }
 
 function getSelectedDateText (selectDate) {
-	var date = new Date(selectDate);
-	return `${days_names[date.getDay()]} ${date.getDay()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
+	var date = new Date(selectDate.year, selectDate.month, selectDate.day);
+	return `${days_names[date.getDay()]} ${date.getDate()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
 }
 function getNumbersByDate (selectDate) {
 	var auxCombination = $('<ul class="balls"></ul>');
@@ -152,13 +154,17 @@ function createTable () {
 	for (lines in odds) {
 		auxOdd = odds[lines];
 		auxInfoTier = results_table[lines];
-		let infoRow = {
-			'tier': auxInfoTier.tier,
-			'rank': auxInfoTier.combination,
-			'winners': auxOdd.winners,
-			'prize': auxOdd.prize
-		};
-		tBody.append(ich['rowResult'](infoRow));
+		trElement = `<tr>
+            <td class="division halfContainer">
+                <span class="tierSpan entry">${auxInfoTier.tier}</span>
+                <span class="rankSpan entry">${auxInfoTier.combination}</span>
+            </td>
+            <td class="number halfContainer">
+                <span class="entry winners">${auxOdd.winners}x</span>
+                <span class="entry prize"><span class="">€ ${auxOdd.prize}</span></span>
+            </td>
+        </tr>`;
+        tBody.append(trElement);
 	}
 	var table = $('<table></table>').append(tBody);
 	$('#tableContainer').append(table);
