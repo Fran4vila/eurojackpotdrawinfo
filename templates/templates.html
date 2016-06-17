@@ -2,7 +2,7 @@
     <div id='headerDatePicker'>
 		<header>
 	        <h2>{{headerText}}</h2>
-	        <div><select id="datePickerSelectedDay"></select></div>
+	        <div><select id="datePickerSelectedDay" title="Currently disabled..."></select></div>
 	    </header>
     </div>
     <div id="contentInfo" class="content">
@@ -13,6 +13,36 @@
         <div id="results">
             <div id="numberContainer">{{numbers}}</div>
             <div id="tableContainer"></div>
+            <div id="messagesContainer"></div>
         </div>
+    </div>
+    <div id="messages">
+        <article>
+            <section>
+                <h4>The EuroJackpot numbers for {{lateClosingDate}}</h4>
+                <span>
+                The {{lastDrawNumber}}th draw for the EuroJackpot was held on <span style="font-weight: bold;">{{lateClosingDate}}</span>, as usual at {{lateClosingTime}} in Helsinki.
+                </span>
+            </section>
+            <hr />
+            <section>
+                <h4>EuroJackpot numbers for {{lateClosingDate}}</h4>
+                <span>
+                The balls used for the draw are made of a synthetic polymer, softer than ping-pong balls. 
+                The results are broadcast after the draw, with the draw-machines independently checked by the VTT Technical Research Center of Finland.
+                Lottoland published the draw results immediately after the draw on {{lateClosingDate}}. 
+                You can easily check your tickets here at Lottoland, or purchase your ticket for the next draw.
+                </span>
+            </section>
+            <hr />
+            <section>
+                <h4>The EuroJackpot was not won</h4>
+                <span>
+                After another snag-free draw of the EuroJackpot on {{lateClosingDate}}, the results were posted. Unfortunately,  
+                there were no jackpot winners in any of the countries participating in the lottery. 
+                However all is not lost: the jackpot rolls over to the next draw, growing to a chunky {{this.props.nextJackpot}} million Euros!
+                </span>
+            </section>
+        </article>
     </div>
 </div>

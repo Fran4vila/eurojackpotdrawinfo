@@ -1,5 +1,5 @@
-var data; // JSON with the information provided form the site
-const setOfTemplates = ["headerDatePicker", "contentInfo", "rowResult"];
+var data, lastDate; // JSON with the information provided form the site
+const setOfTemplates = ["headerDatePicker", "contentInfo", "messages"];
 const days_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const days_names_short = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -97,6 +97,7 @@ function createTemplate(data, templateId) {
 function build () {
 	createHeader();
 	createContent();
+	createMessages();
 }
 function createHeader () {
 	var info = {
@@ -105,7 +106,7 @@ function createHeader () {
     var html = ich["headerDatePicker"](info);
 	$('#jackpotContainer').append(html);
 	// Create the Select box
-	var lastDate = data.last.date;
+	lastDate = data.last.date;
 	var auxLastDate = new Date(lastDate.year, lastDate.month, lastDate.day);
 	var sel = $('#datePickerSelectedDay');
 	sel.append($("<option>").attr('value',auxLastDate).text(`${days_names[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
@@ -168,4 +169,14 @@ function createTable () {
 	}
 	var table = $('<table></table>').append(tBody);
 	$('#tableContainer').append(table);
+}
+function createMessages() {
+	var auxTime = data.last.lateClosingDate.split(', ');
+	var info = { 
+		'lateClosingDate': `${lastDate.day}.${lastDate.month}.${lastDate.year}`,
+		'lastDrawNumber': data.last.nr,
+		'lateClosingTime': auxTime[1]
+	};
+    var html = ich["messages"](info);
+    $('#messagesContainer').append(html);
 }
