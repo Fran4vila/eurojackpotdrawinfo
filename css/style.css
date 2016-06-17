@@ -6,8 +6,8 @@ header {
     color: #535353;
     margin-bottom: 12px;
     border-bottom: 1px black solid;
-    max-width: 480px;
 }
+#mainApp { margin: auto; max-width: 480px; }
 .logo {
     background: transparent url(../css/images/logo.png) 0px 0px no-repeat;
     height: 50px;
@@ -27,7 +27,6 @@ header {
     font-family: Arial, sans-serif;
     font-weight: normal;
 }
-#results { max-width: 480px; }
 .balls { padding: 0; }
 .balls li {
     background: #fff;
