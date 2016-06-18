@@ -1,7 +1,5 @@
 const gulp = require('gulp');
 
-// var gulpIf = require('gulp-if');
-// var uglify = require('gulp-uglify');
 var cssnano = require('gulp-cssnano');
 var imagemin = require('gulp-imagemin');
 var gls = require('gulp-live-server');
@@ -10,30 +8,27 @@ var runSequence = require('run-sequence');
 var del = require('del');
 var babel = require('gulp-babel');
 
-//Build task concatenate external tool, minify JS and CSS
+// Build task to start with main HTML
 gulp.task('build', function(){
 	console.log('Building files');
 	return gulp.src('*.html')
-		  // Minify JS
-    	// .pipe(gulpIf('*.js', uglify()))
     .pipe(gulp.dest('dist'))
 });
-
-//Move JS file
+// Move JS file
 gulp.task('jsfile', function(){
   return gulp.src('js/main.js')
-  .pipe(babel({ presets: ['es2015'] }))
+  .pipe(babel({ presets: ['es2015'] }))   // Transpile to ES5
   .pipe(gulp.dest('dist/js'))
 });
+// Move Tools
 gulp.task('tools', function(){
   return gulp.src('js/tools/*.js')
   .pipe(gulp.dest('dist/js/tools'))
 });
-//Move CSS Styles
+// Move CSS Styles
 gulp.task('styles', function(){
   return gulp.src('css/style.css')
-	// Minify CSS
-  .pipe(cssnano())
+	.pipe(cssnano())   // Minify CSS
   .pipe(gulp.dest('dist/css'))
 });
 // Optimize images task
@@ -42,24 +37,20 @@ gulp.task('images', function(){
   .pipe(imagemin())
   .pipe(gulp.dest('dist/css/images'))
 });
-
 //Move Data Json
 gulp.task('data', function(){
   return gulp.src('data/info.json')
   .pipe(gulp.dest('dist/data'))
 });
-
 //Move Templates files
 gulp.task('templates', function(){
   return gulp.src('templates/*.html')
   .pipe(gulp.dest('dist/templates'))
 });
-
 //Clean dist folder
 gulp.task('clean', function() {
   return del.sync('dist');
 })
-
 //Create Server
 gulp.task('serve', function() {
   	var server = gls.static('dist', 8888);
@@ -69,13 +60,12 @@ gulp.task('serve', function() {
 		server.notify.apply(server, [file]);
 	});
 });
-
 //Open Browser with server URL
 gulp.task('open', function(){
 	gulp.src(__filename)
 	.pipe(open({uri: 'http://localhost:8888'}));
 });
-
+// Execute everything when typing only 'gulp'
 gulp.task('default', function(callback) {
   runSequence('clean', ['build', 'jsfile', 'tools', 'styles', 'images', 'data', 'templates'], 'serve', 'open', callback);
 });

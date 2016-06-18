@@ -2,7 +2,6 @@ var data, lastDate; // JSON with the information provided form the site
 const setOfTemplates = ["headerDatePicker", "contentInfo", "messages"];
 const days_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const days_names_short = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const month_names_short = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const results_table = {
 	'rank1': {
@@ -55,6 +54,9 @@ const results_table = {
 	}
 };
 
+/**
+ * Get JSON with the info of the last dates.
+ */
 var getData = () => {
 	// This Ajax request is not allowed because of Cross Domain which is disabled in server
 	$.ajax({
@@ -72,12 +74,18 @@ var getData = () => {
 		getLocalCopy();
 	});
 }
+/**
+ * Method to get the local copy of the JSON
+ */
 var getLocalCopy = () => {
 	$.getJSON( "data/info.json", function( response ) {
 		data = response;
 		getTemplates();
 	});
 }
+/**
+ * Create the different templates we will use.
+ */
 var getTemplates = () => {
 	$.get('./templates/templates.html', function(res){
         //store the template
@@ -88,53 +96,69 @@ var getTemplates = () => {
 		build();
     });
 }
+/**
+ * Includes the templates in the variable ich
+ */
 var createTemplate = (data, templateId) => {
     //get the correct template
     var template = $(data).find("div#" + templateId + "");
     ich.addTemplate(templateId, template.html());
 }
-
+/**
+ * Build the site.
+ */
 var build = () => {
 	createHeader();
 	createContent();
 	createMessages();
 }
+/**
+ * Create the header of the site.
+ */
 var createHeader = () => {
-	var info = {
-        'headerText': "EuroJackpot Results & Winning Numbers"
-    };
-    var html = ich["headerDatePicker"](info);
-	$('#jackpotContainer').append(html);
+	var info = { 'headerText': "EuroJackpot Results & Winning Numbers" };
+    $('#jackpotContainer').append(ich["headerDatePicker"](info));
 	// Create the Select box
 	lastDate = data.last.date;
 	var auxLastDate = new Date(lastDate.year, lastDate.month, lastDate.day);
 	var sel = $('#datePickerSelectedDay');
-	sel.append($("<option>").attr('value',auxLastDate).text(`${days_names[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
+	sel.append($("<option>").attr('value',auxLastDate).text(`${days_names_short[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
 	// We show last 10 dates
 	for (var i=0; i<10; i++) {
 		auxLastDate.setDate(auxLastDate.getDate() -7);
-		sel.append($("<option>").attr('value',auxLastDate).text(`${days_names[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
+		sel.append($("<option>").attr('value',auxLastDate).text(`${days_names_short[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
 	}
 	// We disable the select because AJAX is not working and we don't have more information about other dates
 	sel.attr('disabled', true);
 }
+/**
+ * Create the content of the site.
+ */
 var createContent = () => {
 	var info = {
         'subTitle': "EuroJackpot",
         'selectedDate': `Results for ${getSelectedDateText(data.last.date)}`
     };
-	var html = ich["contentInfo"](info);
-	$('#jackpotContainer').append(html);
+	$('#jackpotContainer').append(ich["contentInfo"](info));
 	// We include the numbers
 	$('#numberContainer').html(getNumbersByDate(data.last));
 	// Summary of results
 	createTable();
 }
-
+/**
+ * Method to build a date.
+ * @param {object} selectDate info of the selected.
+ * @return {string} The result of building the date.
+ */
 var getSelectedDateText = (selectDate) => {
 	var date = new Date(selectDate.year, selectDate.month, selectDate.day);
 	return `${days_names[date.getDay()]} ${date.getDate()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
 }
+/**
+ * Creates a list of numbers.
+ * @param {object} selectDate info of the selected.
+ * @return {HTML element} List with the numbers for a date.
+ */
 var getNumbersByDate = (selectDate) => {
 	var auxCombination = $('<ul class="balls"></ul>');
 	const length = selectDate.numbers.length;
@@ -145,30 +169,35 @@ var getNumbersByDate = (selectDate) => {
 	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[1]} </li>`);
 	return auxCombination;
 }
+/**
+ * Creates the table with the results.
+ */
 var createTable = () => {
-	var rank, lines, auxOdd, auxInfoTier,
-		odds = data.last.odds,
+	var auxOdd, auxInfoTier,
 		tBody = $('<tbody></tbody>');
 
-	delete odds.rank0;
-	odds.forEach( lines => {
-		auxOdd = odds[lines];
+	delete data.last.odds.rank0;
+	$.each(data.last.odds, (lines) => {
+		auxOdd = data.last.odds[lines];
 		auxInfoTier = results_table[lines];
-		trElement = `<tr>
-            <td class="division halfContainer">
-                <span class="tierSpan entry">${auxInfoTier.tier}</span>
-                <span class="rankSpan entry">${auxInfoTier.combination}</span>
+		var trElem = $(`<tr>
+            <td class='division halfContainer'>
+                <span class='tierSpan entry'>${auxInfoTier.tier}</span>
+                <span class='rankSpan entry'>${auxInfoTier.combination}</span>
             </td>
-            <td class="number halfContainer">
-                <span class="entry winners">${auxOdd.winners}x</span>
-                <span class="entry prize"><span class="">€ ${auxOdd.prize}</span></span>
+            <td class='number halfContainer'>
+                <span class='entry winners'>${auxOdd.winners}x</span>
+                <span class='entry prize'>€ ${auxOdd.prize}</span>
             </td>
-        </tr>`;
-        tBody.append(trElement);
-	});
+        </tr>`);
+        tBody.append(trElem);
+	})	;
 	var table = $('<table></table>').append(tBody);
 	$('#tableContainer').append(table);
 }
+/**
+ * Creates the extra messages at the bottom of the results.
+ */
 var createMessages = () => {
 	var auxTime = data.last.lateClosingDate.split(', ');
 	var info = { 
@@ -176,6 +205,5 @@ var createMessages = () => {
 		'lastDrawNumber': data.last.nr,
 		'lateClosingTime': auxTime[1]
 	};
-    var html = ich["messages"](info);
-    $('#messagesContainer').append(html);
+    $('#messagesContainer').append(ich["messages"](info));
 }
