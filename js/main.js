@@ -199,9 +199,12 @@ var getNumbersByDate = (selectDate) => {
 	auxCombination.append(`<li id="extraBall2" class="ballNumber extra"> ${selectDate.euroNumbers[1]} </li>`);
 	return auxCombination;
 }
+/**
+ * Method to select/unselect balls and check prizes
+  * @param {event} event information of the clicked element 
+ */
 var checkCombination = (event) => {
 	// Enabled / Disable selection
-
 	var auxElem = $(`#${event.target.id}`);
 	if (auxElem.hasClass("ballNumber")) {
 		if (auxElem.hasClass("ballSelected"))
@@ -211,7 +214,10 @@ var checkCombination = (event) => {
 		checkResult();
 	}
 }
-var checkResult = () => {
+/**
+ * Checking if the combination selected is in the table to highlight it
+ */
+ var checkResult = () => {
 	var numbersCont = $('#ballsList').children('.normal.ballSelected').length;
 	var euroNumbersCont = $('#ballsList').children('.extra.ballSelected').length;
 	// We reset the prize shown
@@ -231,12 +237,15 @@ var checkResult = () => {
  * Creates the table with the results.
  */
 var createTable = () => {
-	var auxOdd, auxInfoTier, auxNumber,
+	var auxOdd, auxInfoTier, auxNumber, pos, trElem,
+		odds = data.last.odds, lines, elem, arrLines = [],
 		tBody = $('<tbody></tbody>');
 
-	delete data.last.odds.rank0;
-	$.each(data.last.odds, (lines) => {
-		auxOdd = data.last.odds[lines];
+	delete odds.rank0;
+	for (lines in odds) {
+	 	auxOdd = odds[lines];
+	 	// First to order the elements
+	 	pos = lines.substring(4);
 		auxInfoTier = results_table[lines];
 		auxNumber = numberWithCommas(auxOdd.prize);
 		var trElem = $(`<tr id='${lines}'>
@@ -249,12 +258,20 @@ var createTable = () => {
                 <span class='entry prize'>€ ${auxNumber}</span>
             </td>
         </tr>`);
-        tBody.append(trElem);
-	});
+		arrLines[pos] = trElem;
+	}
+	for (elem in arrLines) {
+    	tBody.append(arrLines[elem]);
+    }
 	var table = $('<table></table>').append(tBody);
 	$('#tableContainer').append(table);
 }
-var numberWithCommas = (number) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+/**
+ * Creates the number with commas in thousands.
+ * @param {string} number string with the number to convert.
+ * @return {string} Number with commas.
+ */
+ var numberWithCommas = (number) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 /**
  * Creates the extra messages at the bottom of the results.
  */

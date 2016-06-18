@@ -7,7 +7,7 @@ header {
     margin-bottom: 12px;
     border-bottom: 1px black solid;
 }
-#mainApp { margin: auto; max-width: 480px; }
+#mainApp { margin: 0 20%; }
 .logo {
     background: transparent url(../css/images/logo.png) 0px 0px no-repeat;
     height: 50px;
@@ -72,6 +72,9 @@ td.number { text-align: right; }
 .rankSpan { min-width: 135px; float:right; color:#000; }
 .winners { font-style: italic; }
 
+@media  screen and (max-width: 820px) {
+    #mainApp { max-width: 480px; margin: auto; }
+}
 @media  screen and (max-width: 400px) {
     .tierSpan { min-width:50px; float:left; }
 }
