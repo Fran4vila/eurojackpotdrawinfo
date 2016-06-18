@@ -6,51 +6,75 @@ const month_names_short = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug
 const results_table = {
 	'rank1': {
 		'tier': 'Tier I',
-		'combination': '5 Numbers, 2 Euronumbers'
+		'combination': '5 Numbers, 2 Euronumbers',
+		'numbers': 5,
+		'euroNumbers': 2
 	},
 	'rank2': {
 		'tier': 'Tier II',
-		'combination': '5 Numbers, 1 Euronumber'
+		'combination': '5 Numbers, 1 Euronumber',
+		'numbers': 5,
+		'euroNumbers': 1
 	},
 	'rank3': {
 		'tier': 'Tier III',
-		'combination': '5 Numbers, 0 Euronumbers'
+		'combination': '5 Numbers, 0 Euronumbers',
+		'numbers': 5,
+		'euroNumbers': 0
 	},
 	'rank4': {
 		'tier': 'Tier IV',
-		'combination': '4 Numbers, 2 Euronumbers'
+		'combination': '4 Numbers, 2 Euronumbers',
+		'numbers': 4,
+		'euroNumbers': 2
 	},
 	'rank5': {
 		'tier': 'Tier V',
-		'combination': '4 Numbers, 1 Euronumber'
+		'combination': '4 Numbers, 1 Euronumber',
+		'numbers': 4,
+		'euroNumbers': 1
 	},
 	'rank6': {
 		'tier': 'Tier VI',
-		'combination': '4 Numbers, 0 Euronumbers'
+		'combination': '4 Numbers, 0 Euronumbers',
+		'numbers': 4,
+		'euroNumbers': 0
 	},
 	'rank7': {
 		'tier': 'Tier VII',
-		'combination': '3 Numbers, 2 Euronumbers'
+		'combination': '3 Numbers, 2 Euronumbers',
+		'numbers': 3,
+		'euroNumbers': 2
 	},
 	'rank8': {
 		'tier': 'Tier VIII',
-		'combination': '2 Numbers, 2 Euronumbers'
+		'combination': '2 Numbers, 2 Euronumbers',
+		'numbers': 2,
+		'euroNumbers': 2
 	},
 	'rank9': {
 		'tier': 'Tier IX',
-		'combination': '3 Numbers, 1 Euronumber'
+		'combination': '3 Numbers, 1 Euronumber',
+		'numbers': 3,
+		'euroNumbers': 1
 	},
 	'rank10': {
 		'tier': 'Tier X',
-		'combination': '3 Numbers, 0 Euronumbers'
+		'combination': '3 Numbers, 0 Euronumbers',
+		'numbers': 3,
+		'euroNumbers': 0
 	},
 	'rank11': {
 		'tier': 'Tier XI',
-		'combination': '1 Numbers, 2 Euronumbers'
+		'combination': '1 Numbers, 2 Euronumbers',
+		'numbers': 1,
+		'euroNumbers': 2
 	},
 	'rank12': {
 		'tier': 'Tier XII',
-		'combination': '2 Numbers, 1 Euronumber'
+		'combination': '2 Numbers, 1 Euronumber',
+		'numbers': 2,
+		'euroNumbers': 1
 	}
 };
 
@@ -121,15 +145,19 @@ var createHeader = () => {
 	// Create the Select box
 	lastDate = data.last.date;
 	var auxLastDate = new Date(lastDate.year, lastDate.month, lastDate.day);
-	var sel = $('#datePickerSelectedDay');
-	sel.append($("<option>").attr('value',auxLastDate).text(`${days_names_short[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
+	var selDay = $('#datePickerSelectedDay');
+	var selYear = $('#datePickerSelectedYear');
+	selDay.append($("<option>").attr('value',auxLastDate).text(`${days_names_short[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
+	selYear.append($("<option>").attr('value',lastDate.year).text(lastDate.year));
 	// We show last 10 dates
 	for (var i=0; i<10; i++) {
 		auxLastDate.setDate(auxLastDate.getDate() -7);
-		sel.append($("<option>").attr('value',auxLastDate).text(`${days_names_short[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
+		selDay.append($("<option>").attr('value',auxLastDate).text(`${days_names_short[auxLastDate.getDay()]} ${auxLastDate.getDate()} ${month_names_short[auxLastDate.getMonth()]}`));
+		selYear.append($("<option>").attr('value',lastDate.year).text(lastDate.year--));
 	}
 	// We disable the select because AJAX is not working and we don't have more information about other dates
-	sel.attr('disabled', true);
+	selDay.attr('disabled', true);
+	selYear.attr('disabled', true);
 }
 /**
  * Create the content of the site.
@@ -140,6 +168,7 @@ var createContent = () => {
         'selectedDate': `Results for ${getSelectedDateText(data.last.date)}`
     };
 	$('#jackpotContainer').append(ich["contentInfo"](info));
+	$('#jackpotContainer').append($('<div>Select your combination to check if you are a new rick!</div>'));
 	// We include the numbers
 	$('#numberContainer').html(getNumbersByDate(data.last));
 	// Summary of results
@@ -152,7 +181,7 @@ var createContent = () => {
  */
 var getSelectedDateText = (selectDate) => {
 	var date = new Date(selectDate.year, selectDate.month, selectDate.day);
-	return `${days_names[date.getDay()]} ${date.getDate()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
+	return `${days_names[date.getDay()-1]} ${date.getDate()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
 }
 /**
  * Creates a list of numbers.
@@ -160,41 +189,72 @@ var getSelectedDateText = (selectDate) => {
  * @return {HTML element} List with the numbers for a date.
  */
 var getNumbersByDate = (selectDate) => {
-	var auxCombination = $('<ul class="balls"></ul>');
+	var auxCombination = $('<ul id="ballsList" class="ballsContainer"></ul>');
+	auxCombination.on('click', checkCombination.bind(this));
 	const length = selectDate.numbers.length;
 	for (var i=0; i<length; i++) {
-		auxCombination.append(`<li> ${selectDate.numbers[i]} </li>`);
+		auxCombination.append(`<li id='ball${i}' class="ballNumber normal"> ${selectDate.numbers[i]} </li>`);
 	}
-	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[0]} </li>`);
-	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[1]} </li>`);
+	auxCombination.append(`<li id="extraBall1" class="ballNumber extra"> ${selectDate.euroNumbers[0]} </li>`);
+	auxCombination.append(`<li id="extraBall2" class="ballNumber extra"> ${selectDate.euroNumbers[1]} </li>`);
 	return auxCombination;
+}
+var checkCombination = (event) => {
+	// Enabled / Disable selection
+
+	var auxElem = $(`#${event.target.id}`);
+	if (auxElem.hasClass("ballNumber")) {
+		if (auxElem.hasClass("ballSelected"))
+			auxElem.removeClass('ballSelected');
+		else
+			auxElem.addClass('ballSelected');
+		checkResult();
+	}
+}
+var checkResult = () => {
+	var numbersCont = $('#ballsList').children('.normal.ballSelected').length;
+	var euroNumbersCont = $('#ballsList').children('.extra.ballSelected').length;
+	// We reset the prize shown
+	if ($('.currentPrize'))
+		$('.currentPrize').removeClass('currentPrize');
+	$.each(results_table, (tier) => {
+		// We check if there is a new prize
+		if ( (results_table[tier].numbers === numbersCont) && (results_table[tier].euroNumbers === euroNumbersCont) ) {
+			if ( $(`#${tier}`).hasClass('currentPrize') )
+				$(`#${tier}`).removeClass('currentPrize');
+			else
+				$(`#${tier}`).addClass('currentPrize');
+		}
+	});
 }
 /**
  * Creates the table with the results.
  */
 var createTable = () => {
-	var auxOdd, auxInfoTier,
+	var auxOdd, auxInfoTier, auxNumber,
 		tBody = $('<tbody></tbody>');
 
 	delete data.last.odds.rank0;
 	$.each(data.last.odds, (lines) => {
 		auxOdd = data.last.odds[lines];
 		auxInfoTier = results_table[lines];
-		var trElem = $(`<tr>
+		auxNumber = numberWithCommas(auxOdd.prize);
+		var trElem = $(`<tr id='${lines}'>
             <td class='division halfContainer'>
                 <span class='tierSpan entry'>${auxInfoTier.tier}</span>
                 <span class='rankSpan entry'>${auxInfoTier.combination}</span>
             </td>
             <td class='number halfContainer'>
                 <span class='entry winners'>${auxOdd.winners}x</span>
-                <span class='entry prize'>€ ${auxOdd.prize}</span>
+                <span class='entry prize'>€ ${auxNumber}</span>
             </td>
         </tr>`);
         tBody.append(trElem);
-	})	;
+	});
 	var table = $('<table></table>').append(tBody);
 	$('#tableContainer').append(table);
 }
+var numberWithCommas = (number) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 /**
  * Creates the extra messages at the bottom of the results.
  */

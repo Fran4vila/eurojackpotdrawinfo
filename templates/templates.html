@@ -2,7 +2,10 @@
     <div id='headerDatePicker'>
 		<header>
 	        <h2>{{headerText}}</h2>
-	        <div><select id="datePickerSelectedDay" title="Currently disabled..."></select></div>
+	        <div>
+                <select id="datePickerSelectedDay" title="Currently disabled..."></select>
+                <select id="datePickerSelectedYear" title="Currently disabled..."></select>
+            </div>
 	    </header>
     </div>
     <div id="contentInfo" class="content">
@@ -11,6 +14,7 @@
             <span id="selectedDate">{{selectedDate}}</span>
         </header>
         <div id="results">
+            <h4>Select a combination to see if you got a prize</h4>
             <div id="numberContainer">{{numbers}}</div>
             <div id="tableContainer"></div>
             <div id="messagesContainer"></div>

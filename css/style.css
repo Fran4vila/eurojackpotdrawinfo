@@ -28,8 +28,10 @@ header {
     font-weight: normal;
 }
 #datePickerSelectedDay { cursor: not-allowed; }
-.balls { padding: 0; }
-.balls li {
+.currentPrize { background-color: #dfe0ff!important; }
+.ballSelected { background-color: #69a507!important; color: #FFF!important; }
+.ballsContainer { padding: 0; }
+.ballsContainer li {
     background: #fff;
     display: inline-block;
     border-radius: 30px;
@@ -42,8 +44,9 @@ header {
     margin-right: 6px;
     color: #535353;
     box-sizing: border-box;
+    cursor: pointer;
 }
-.balls li.extra {
+.ballsContainer li.extra {
     border-color: #815422;
 }
 
