@@ -1,8 +1,7 @@
-var gulp = require('gulp');
+const gulp = require('gulp');
 
-var useref = require('gulp-useref');
-var gulpIf = require('gulp-if');
-var uglify = require('gulp-uglify');
+// var gulpIf = require('gulp-if');
+// var uglify = require('gulp-uglify');
 var cssnano = require('gulp-cssnano');
 var imagemin = require('gulp-imagemin');
 var gls = require('gulp-live-server');
@@ -15,16 +14,29 @@ var babel = require('gulp-babel');
 gulp.task('build', function(){
 	console.log('Building files');
 	return gulp.src('*.html')
-		.pipe(useref())
-		// Minify JS
-    	.pipe(gulpIf('main.js', babel(/*{presets: ['es2015']}*/)))
-    	//.pipe(gulpIf('*.js', uglify()))
-    	// Minify CSS
-    	.pipe(gulpIf('*.css', cssnano()))
-		.pipe(gulp.dest('dist'))
+		  // Minify JS
+    	// .pipe(gulpIf('*.js', uglify()))
+    .pipe(gulp.dest('dist'))
 });
 
-//Optimize images task
+//Move JS file
+gulp.task('jsfile', function(){
+  return gulp.src('js/main.js')
+  .pipe(babel({ presets: ['es2015'] }))
+  .pipe(gulp.dest('dist/js'))
+});
+gulp.task('tools', function(){
+  return gulp.src('js/tools/*.js')
+  .pipe(gulp.dest('dist/js/tools'))
+});
+//Move CSS Styles
+gulp.task('styles', function(){
+  return gulp.src('css/style.css')
+	// Minify CSS
+  .pipe(cssnano())
+  .pipe(gulp.dest('dist/css'))
+});
+// Optimize images task
 gulp.task('images', function(){
   return gulp.src('css/images/**/*.+(png|jpg|gif|svg)')
   .pipe(imagemin())
@@ -65,5 +77,5 @@ gulp.task('open', function(){
 });
 
 gulp.task('default', function(callback) {
-  runSequence('clean', ['build','images', 'data', 'templates'], 'serve', 'open', callback);
+  runSequence('clean', ['build', 'jsfile', 'tools', 'styles', 'images', 'data', 'templates'], 'serve', 'open', callback);
 });

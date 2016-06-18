@@ -55,7 +55,7 @@ const results_table = {
 	}
 };
 
-function getData () {
+var getData = () => {
 	// This Ajax request is not allowed because of Cross Domain which is disabled in server
 	$.ajax({
 		'url': 'https://media.lottoland.com/api/drawings/euroJackpot',
@@ -72,13 +72,13 @@ function getData () {
 		getLocalCopy();
 	});
 }
-function getLocalCopy () {
+var getLocalCopy = () => {
 	$.getJSON( "data/info.json", function( response ) {
 		data = response;
 		getTemplates();
 	});
 }
-function getTemplates () {
+var getTemplates = () => {
 	$.get('./templates/templates.html', function(res){
         //store the template
         var auxLength = setOfTemplates.length;
@@ -88,18 +88,18 @@ function getTemplates () {
 		build();
     });
 }
-function createTemplate(data, templateId) {
+var createTemplate = (data, templateId) => {
     //get the correct template
     var template = $(data).find("div#" + templateId + "");
     ich.addTemplate(templateId, template.html());
 }
 
-function build () {
+var build = () => {
 	createHeader();
 	createContent();
 	createMessages();
 }
-function createHeader () {
+var createHeader = () => {
 	var info = {
         'headerText': "EuroJackpot Results & Winning Numbers"
     };
@@ -118,7 +118,7 @@ function createHeader () {
 	// We disable the select because AJAX is not working and we don't have more information about other dates
 	sel.attr('disabled', true);
 }
-function createContent() {
+var createContent = () => {
 	var info = {
         'subTitle': "EuroJackpot",
         'selectedDate': `Results for ${getSelectedDateText(data.last.date)}`
@@ -131,11 +131,11 @@ function createContent() {
 	createTable();
 }
 
-function getSelectedDateText (selectDate) {
+var getSelectedDateText = (selectDate) => {
 	var date = new Date(selectDate.year, selectDate.month, selectDate.day);
 	return `${days_names[date.getDay()]} ${date.getDate()} ${month_names_short[date.getMonth()]} ${date.getFullYear()}`;
 }
-function getNumbersByDate (selectDate) {
+var getNumbersByDate = (selectDate) => {
 	var auxCombination = $('<ul class="balls"></ul>');
 	const length = selectDate.numbers.length;
 	for (var i=0; i<length; i++) {
@@ -145,14 +145,13 @@ function getNumbersByDate (selectDate) {
 	auxCombination.append(`<li class="extra"> ${selectDate.euroNumbers[1]} </li>`);
 	return auxCombination;
 }
-function createTable () {
-	var odds = data.last.odds,
-		tr = [],
-		rank;
+var createTable = () => {
+	var rank, lines, auxOdd, auxInfoTier,
+		odds = data.last.odds,
+		tBody = $('<tbody></tbody>');
 
 	delete odds.rank0;
-	var auxOdd, auxInfoTier, tBody = $('<tbody></tbody>');
-	for (lines in odds) {
+	odds.forEach( lines => {
 		auxOdd = odds[lines];
 		auxInfoTier = results_table[lines];
 		trElement = `<tr>
@@ -166,11 +165,11 @@ function createTable () {
             </td>
         </tr>`;
         tBody.append(trElement);
-	}
+	});
 	var table = $('<table></table>').append(tBody);
 	$('#tableContainer').append(table);
 }
-function createMessages() {
+var createMessages = () => {
 	var auxTime = data.last.lateClosingDate.split(', ');
 	var info = { 
 		'lateClosingDate': `${lastDate.day}.${lastDate.month}.${lastDate.year}`,
